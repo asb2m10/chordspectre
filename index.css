@@ -1,8 +1,8 @@
 .chord {
   background-color: #ffffff;
-  display: inline-block; border: 1px solid;
+  display: inline-block; border: 1px inset;
   width: 100%;
-  padding: 2px; border: 5px;
+  padding: 2px;
 }
 
 .chordInner {
@@ -35,7 +35,7 @@
 }
 
 body {
-  background-color: #818080 !important;
+  background-color: #394e6b !important;
 }
 
 .title {
