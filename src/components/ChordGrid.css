@@ -1,0 +1,27 @@
+.chord-grid {
+  display: flex;
+  gap: 12px;
+  padding: 20px;
+  justify-content: center;
+}
+
+.degree-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.degree-header {
+  font-size: 18px;
+  font-weight: bold;
+  color: #888;
+  text-align: center;
+  padding-bottom: 4px;
+}
+
+.chord-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}

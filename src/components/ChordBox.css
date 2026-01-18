@@ -1,0 +1,36 @@
+.chord-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 44px;
+  border: 2px solid #5a7a9a;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #2a3a4e, #1a2a3e);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 6px;
+}
+
+.chord-box:hover {
+  background: linear-gradient(145deg, #3a4a5e, #2a3a4e);
+  border-color: #7a9aba;
+  transform: scale(1.05);
+}
+
+.chord-box:active {
+  transform: scale(0.95);
+}
+
+.chord-box.playing {
+  background: linear-gradient(145deg, #4a6a9a, #3a5a8a);
+  border-color: #6a9aca;
+  box-shadow: 0 0 15px rgba(100, 150, 200, 0.5);
+}
+
+.chord-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+}

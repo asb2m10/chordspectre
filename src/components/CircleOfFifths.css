@@ -1,0 +1,77 @@
+.circle-of-fifths {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.circle-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle-note {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid #444;
+  background: linear-gradient(145deg, #2a2a3e, #1a1a2e);
+  color: #ccc;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle-note.major {
+  width: 44px;
+  height: 44px;
+  font-size: 14px;
+}
+
+.circle-note.minor {
+  width: 36px;
+  height: 36px;
+  font-size: 11px;
+}
+
+.circle-note:hover {
+  background: linear-gradient(145deg, #3a3a5e, #2a2a4e);
+  border-color: #666;
+}
+
+.circle-note.major.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #8a9eea;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+}
+
+.circle-note.minor.active {
+  background: linear-gradient(135deg, #ea6699 0%, #a24b76 100%);
+  border-color: #ea8aae;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(234, 102, 153, 0.5);
+}
+
+.circle-center {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #1a1a2e, #0a0a1e);
+  border: 2px solid #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.center-label {
+  color: #888;
+  font-size: 12px;
+  font-weight: 600;
+}
