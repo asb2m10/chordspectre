@@ -86,7 +86,7 @@ export function getDiatonicChordsForDegree(degree: Degree, mode: Mode): ChordTyp
 }
 
 // Convert MIDI note number to note name with octave
-function midiToNoteName(midi: number): string {
+export function midiToNoteName(midi: number): string {
   const octave = Math.floor(midi / 12) - 1;
   const noteIndex = midi % 12;
   return `${NOTE_NAMES[noteIndex]}${octave}`;
@@ -119,4 +119,94 @@ export function getChordInfo(
 // Get display name for a chord
 export function getChordDisplayName(degree: Degree, chordType: ChordType): string {
   return `${degree}${chordType.symbol}`;
+}
+
+// Generate all inversions of a chord within a reasonable range
+function generateInversions(midiNotes: number[]): number[][] {
+  const inversions: number[][] = [];
+  const numNotes = midiNotes.length;
+
+  // For each inversion (0 = root, 1 = 1st inversion, etc.)
+  for (let inv = 0; inv < numNotes; inv++) {
+    const inversion: number[] = [];
+    for (let i = 0; i < numNotes; i++) {
+      const noteIndex = (i + inv) % numNotes;
+      let note = midiNotes[noteIndex];
+      // Move notes up octave if they would be below the bass note
+      if (i > 0 && note <= inversion[0]) {
+        note += 12;
+      }
+      // Keep notes within reasonable range
+      while (note < inversion[0]) {
+        note += 12;
+      }
+      inversion.push(note);
+    }
+    inversions.push(inversion.sort((a, b) => a - b));
+  }
+
+  return inversions;
+}
+
+// Calculate total voice movement distance between two chords
+function calculateVoiceDistance(prevNotes: number[], newNotes: number[]): number {
+  if (prevNotes.length === 0) return 0;
+
+  // For each note in newNotes, find the closest note in prevNotes
+  let totalDistance = 0;
+
+  for (const newNote of newNotes) {
+    let minDist = Infinity;
+    for (const prevNote of prevNotes) {
+      const dist = Math.abs(newNote - prevNote);
+      if (dist < minDist) {
+        minDist = dist;
+      }
+    }
+    totalDistance += minDist;
+  }
+
+  return totalDistance;
+}
+
+// Find the best inversion for smooth voice leading
+export function getOptimalVoicing(
+  midiNotes: number[],
+  previousNotes: number[],
+  targetRange: { min: number; max: number } = { min: 48, max: 72 }
+): number[] {
+  if (previousNotes.length === 0) {
+    // No previous chord, return root position centered in range
+    const centerNote = (targetRange.min + targetRange.max) / 2;
+    const rootNote = midiNotes[0];
+    const octaveShift = Math.round((centerNote - rootNote) / 12) * 12;
+    return midiNotes.map(n => n + octaveShift);
+  }
+
+  const inversions = generateInversions(midiNotes);
+  let bestInversion = midiNotes;
+  let bestDistance = Infinity;
+
+  // Try each inversion at different octave positions
+  for (const inversion of inversions) {
+    // Try shifting the inversion to different octaves to stay in range
+    for (let octaveShift = -24; octaveShift <= 24; octaveShift += 12) {
+      const shiftedInversion = inversion.map(n => n + octaveShift);
+
+      // Check if it's within the target range
+      const minNote = Math.min(...shiftedInversion);
+      const maxNote = Math.max(...shiftedInversion);
+      if (minNote < targetRange.min - 6 || maxNote > targetRange.max + 6) {
+        continue;
+      }
+
+      const distance = calculateVoiceDistance(previousNotes, shiftedInversion);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestInversion = shiftedInversion;
+      }
+    }
+  }
+
+  return bestInversion;
 }

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import type { ChordType, Degree, Mode } from '../utils/chords';
-import { getChordInfo } from '../utils/chords';
+import { getChordInfo, getOptimalVoicing, midiToNoteName } from '../utils/chords';
 import { playChord } from '../utils/audio';
 import './ChordBox.css';
 
@@ -28,6 +28,9 @@ export function ChordBox({
     [degree, chordType, rootKey, mode]
   );
 
+  // Convert playingNotes Set to array for voice leading
+  const previousNotes = useMemo(() => [...playingNotes], [playingNotes]);
+
   // Count how many notes this chord shares with the currently playing chord
   const sharedNotesCount = useMemo(() => {
     if (playingNotes.size === 0) return 0;
@@ -37,8 +40,18 @@ export function ChordBox({
   }, [playingNotes, chordInfo.midiNotes]);
 
   const handleClick = () => {
-    playChord(chordInfo.notes);
-    onChordPlay(chordInfo.midiNotes);
+    // Get optimal voicing based on previous chord for smooth voice leading
+    const optimalMidiNotes = getOptimalVoicing(
+      chordInfo.midiNotes,
+      previousNotes,
+      { min: rootKey, max: rootKey + 24 }
+    );
+
+    // Convert MIDI notes to note names for playback
+    const noteNames = optimalMidiNotes.map(midiToNoteName);
+
+    playChord(noteNames);
+    onChordPlay(optimalMidiNotes);
 
     setIsPlaying(true);
     setTimeout(() => {
