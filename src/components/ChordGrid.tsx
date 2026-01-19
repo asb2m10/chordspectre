@@ -6,9 +6,11 @@ import './ChordGrid.css';
 interface ChordGridProps {
   rootKey: number;
   mode: Mode;
+  playingNotes: Set<number>;
+  onChordPlay: (midiNotes: number[]) => void;
 }
 
-export function ChordGrid({ rootKey, mode }: ChordGridProps) {
+export function ChordGrid({ rootKey, mode, playingNotes, onChordPlay }: ChordGridProps) {
   return (
     <div className="chord-grid">
       {DEGREES.map((degree) => {
@@ -24,6 +26,8 @@ export function ChordGrid({ rootKey, mode }: ChordGridProps) {
                   chordType={chordType}
                   rootKey={rootKey}
                   mode={mode}
+                  playingNotes={playingNotes}
+                  onChordPlay={onChordPlay}
                 />
               ))}
             </div>

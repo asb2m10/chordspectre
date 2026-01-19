@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import './CircleOfFifths.css';
 
 // Circle of fifths order (clockwise from top) - Major keys
@@ -40,15 +41,34 @@ interface CircleOfFifthsProps {
   onRootKeyChange: (rootKey: number) => void;
   onModeChange: (mode: Mode) => void;
   octave: number;
+  playingNotes: Set<number>;
 }
 
-export function CircleOfFifths({ rootKey, mode, onRootKeyChange, onModeChange, octave }: CircleOfFifthsProps) {
+export function CircleOfFifths({
+  rootKey,
+  mode,
+  onRootKeyChange,
+  onModeChange,
+  octave,
+  playingNotes
+}: CircleOfFifthsProps) {
   const currentSemitone = rootKey % 12;
+
+  // Get pitch classes of playing notes
+  const playingPitchClasses = useMemo(() => {
+    return new Set([...playingNotes].map(n => n % 12));
+  }, [playingNotes]);
 
   const handleNoteClick = (semitone: number, noteMode: Mode) => {
     const newRootKey = (octave + 1) * 12 + semitone;
     onRootKeyChange(newRootKey);
     onModeChange(noteMode);
+  };
+
+  const getHighlightClass = (semitone: number, isActive: boolean) => {
+    if (isActive) return '';
+    if (playingPitchClasses.has(semitone)) return 'highlight';
+    return '';
   };
 
   return (
@@ -61,11 +81,12 @@ export function CircleOfFifths({ rootKey, mode, onRootKeyChange, onModeChange, o
           const x = Math.cos(angle) * radius;
           const y = Math.sin(angle) * radius;
           const isActive = note.semitone === currentSemitone && mode === 'major';
+          const highlightClass = getHighlightClass(note.semitone, isActive);
 
           return (
             <button
               key={note.name}
-              className={`circle-note major ${isActive ? 'active' : ''}`}
+              className={`circle-note major ${isActive ? 'active' : ''} ${highlightClass}`}
               style={{
                 transform: `translate(${x}px, ${y}px)`,
               }}
@@ -83,11 +104,12 @@ export function CircleOfFifths({ rootKey, mode, onRootKeyChange, onModeChange, o
           const x = Math.cos(angle) * radius;
           const y = Math.sin(angle) * radius;
           const isActive = note.semitone === currentSemitone && mode === 'minor';
+          const highlightClass = getHighlightClass(note.semitone, isActive);
 
           return (
             <button
               key={note.name}
-              className={`circle-note minor ${isActive ? 'active' : ''}`}
+              className={`circle-note minor ${isActive ? 'active' : ''} ${highlightClass}`}
               style={{
                 transform: `translate(${x}px, ${y}px)`,
               }}

@@ -44,6 +44,13 @@
   border-color: #666;
 }
 
+.circle-note.highlight {
+  border-color: #ea9a5a;
+  background: linear-gradient(145deg, #4e3a2a, #3e2a1a);
+  box-shadow: 0 0 12px rgba(234, 154, 90, 0.5);
+  color: #fff;
+}
+
 .circle-note.major.active {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-color: #8a9eea;

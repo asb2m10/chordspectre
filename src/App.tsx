@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ChordGrid } from './components/ChordGrid';
 import { CircleOfFifths, type Mode } from './components/CircleOfFifths';
 import { initAudio, isAudioReady } from './utils/audio';
@@ -11,6 +11,7 @@ function App() {
   const [rootKey, setRootKey] = useState(48); // C3
   const [octave, setOctave] = useState(3);
   const [mode, setMode] = useState<Mode>('major');
+  const [playingNotes, setPlayingNotes] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     setAudioInitialized(isAudioReady());
@@ -36,6 +37,10 @@ function App() {
     const currentSemitone = rootKey % 12;
     setRootKey((newOctave + 1) * 12 + currentSemitone);
   };
+
+  const handleChordPlay = useCallback((midiNotes: number[]) => {
+    setPlayingNotes(new Set(midiNotes));
+  }, []);
 
   const currentNote = NOTE_NAMES[rootKey % 12];
   const currentOctave = Math.floor(rootKey / 12) - 1;
@@ -72,7 +77,12 @@ function App() {
           </div>
 
           <main className="main-content">
-            <ChordGrid rootKey={rootKey} mode={mode} />
+            <ChordGrid
+              rootKey={rootKey}
+              mode={mode}
+              playingNotes={playingNotes}
+              onChordPlay={handleChordPlay}
+            />
           </main>
 
           <footer className="circle-section">
@@ -82,6 +92,7 @@ function App() {
               onRootKeyChange={handleRootKeyChange}
               onModeChange={handleModeChange}
               octave={octave}
+              playingNotes={playingNotes}
             />
           </footer>
         </>

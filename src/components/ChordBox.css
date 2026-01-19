@@ -26,7 +26,26 @@
 .chord-box.playing {
   background: linear-gradient(145deg, #4a6a9a, #3a5a8a);
   border-color: #6a9aca;
-  box-shadow: 0 0 15px rgba(100, 150, 200, 0.5);
+  box-shadow: 0 0 15px rgba(100, 150, 200, 0.6);
+}
+
+/* Highlight levels based on shared notes */
+.chord-box.highlight-low {
+  border-color: #6a8a5a;
+  background: linear-gradient(145deg, #2a3e2a, #1a2e1a);
+  box-shadow: 0 0 8px rgba(100, 180, 100, 0.3);
+}
+
+.chord-box.highlight-medium {
+  border-color: #9a9a5a;
+  background: linear-gradient(145deg, #3e3e2a, #2e2e1a);
+  box-shadow: 0 0 10px rgba(180, 180, 100, 0.4);
+}
+
+.chord-box.highlight-high {
+  border-color: #ea9a5a;
+  background: linear-gradient(145deg, #4e3a2a, #3e2a1a);
+  box-shadow: 0 0 12px rgba(234, 154, 90, 0.5);
 }
 
 .chord-name {
